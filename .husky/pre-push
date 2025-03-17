@@ -1,0 +1,13 @@
+# Branch name validation
+BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+
+PROTECTED_BRANCHES="^(main|master)$"
+if [[ $BRANCH_NAME =~ $PROTECTED_BRANCHES ]]; then
+    echo "❌ Direct pushes to protected branches are not allowed"
+    exit 1
+fi
+
+# Run checks
+echo "🔍 Running pre-push checks..."
+# npm run check-types || exit 1
+yarn build:prod || exit 1
