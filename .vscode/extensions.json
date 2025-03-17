@@ -1,0 +1,18 @@
+{
+  "recommendations": [
+    "aaron-bond.better-comments",
+    "bradlc.vscode-tailwindcss",
+    "burkeholland.simple-react-snippets",
+    "dbaeumer.vscode-eslint",
+    "dsznajder.es7-react-js-snippets",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "formulahendry.auto-rename-tag",
+    "gruntfuggly.todo-tree",
+    "mhutchie.git-graph",
+    "ms-vsliveshare.vsliveshare",
+    "oderwat.indent-rainbow",
+    "pkief.material-icon-theme",
+    "usernamehw.errorlens"
+  ]
+}
