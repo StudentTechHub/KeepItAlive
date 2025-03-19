@@ -10,4 +10,4 @@ fi
 # Run checks
 echo "🔍 Running pre-push checks..."
 # npm run check-types || exit 1
-yarn build:prod || exit 1
+yarn build || exit 1
