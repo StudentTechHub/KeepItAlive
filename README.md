@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# KeepItAlive
 
-## Getting Started
+## Quick Setup
 
-First, run the development server:
+To get started with the KeepItAlive project, follow these steps:
 
-```bash
+### Prerequisites
+
+Make sure you have the following installed on your development machine:
+
+- [Node.js](https://nodejs.org/) (version 14.x or later)
+
+### Installation
+
+1. **Clone the repository:**
+
+   ```sh
+   git clone https://github.com/StudentTechHub/KeepItAlive.git
+   cd KeepItAlive
+   ```
+
+2. **Install dependencies:**
+
+   ```sh
+   npm install
+   ```
+
+3. **Set up Husky hooks:**
+
+   ```sh
+   npm run prepare
+   ```
+
+### Running the Development Server
+
+```sh
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This will start the Next.js development server on [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Building the Project
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```sh
+npm run build
+```
 
-## Learn More
+This will create an optimized production build in the `.next` directory.
 
-To learn more about Next.js, take a look at the following resources:
+### Linting and Formatting
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sh
+npm run lint
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+To format the codebase, run:
 
-## Deploy on Vercel
+```sh
+npm run format
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Running Tests
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+To run the tests, run:
+
+```sh
+npm run test
+```
+
+### Explanation of Key Files and Directories
+
+- **.husky/**  
+  This directory contains Git hook scripts configured by Husky. These hooks (like pre-commit, pre-push, and commit message validation) run custom scripts automatically during Git events. For example, you might run tests or linters before commits to ensure code quality.
+
+- **.lintstagedrc.js**  
+  This configuration file works with lint-staged. It specifies which linters or formatters to run on files that are staged in Git. The idea is to catch and fix issues only on changed code before a commit, which speeds up the feedback loop.
+
+- **commitlint.config.js**  
+  This file configures commitlint, a tool that enforces certain rules on your commit messages. It helps teams maintain a consistent commit history, which is useful for automated changelog generation and clear project history.
+
+- **eslint.config.mjs**  
+  This module contains the configuration for ESLint, a tool for identifying and fixing potential issues in your JavaScript/TypeScript code. ESLint helps catch bugs and enforce coding standards, making the codebase more maintainable.
+
+- **next.config.ts**  
+  This is the configuration file for Next.js, a React framework. It allows you to customize how Next.js behaves (for example, routing, environment variables, and webpack configuration) and is written in TypeScript to benefit from type checking.
+
+- **package.json**  
+  This is the main manifest file for your Node.js project. It includes metadata (like project name, version, author), dependencies, and scripts for tasks like building, testing, or running the project. It’s essential for managing the project’s packages and lifecycle.
+
+- **postcss.config.mjs**  
+  This configuration file for PostCSS is used to process CSS with plugins. It can handle tasks like autoprefixing CSS properties or transforming modern CSS syntax for backward compatibility, improving the robustness of your styles.
+
+- **tsconfig.json**  
+  This file configures TypeScript for your project. It sets rules about the project's structure and compiler options, helping ensure that the TypeScript code is correctly validated and converted to JavaScript.
+
+Each configuration file and directory serves to maintain high code quality, enforce standards, streamline workflows, and organize your project efficiently in a React/TypeScript/Next.js context.
+
+This should help you get started with the KeepItAlive project. If you have any questions, feel free to reach out!
