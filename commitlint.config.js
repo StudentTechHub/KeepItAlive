@@ -2,7 +2,7 @@ module.exports = {
   extends: ["@commitlint/config-conventional"],
   rules: {
     "type-enum": [
-      2,
+      1,
       "always",
       [
         "feat", // New features
@@ -20,6 +20,6 @@ module.exports = {
         "wip" // Work in progress
       ]
     ],
-    "scope-case": [2, "always", "kebab-case"]
+    "scope-case": [1, "always", "kebab-case"]
   }
 };

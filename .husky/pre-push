@@ -3,7 +3,9 @@ BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
 
 PROTECTED_BRANCHES="^(main|master)$"
 if [[ $BRANCH_NAME =~ $PROTECTED_BRANCHES ]]; then
-    echo "❌ Direct pushes to protected branches are not allowed"
+    echo "❌ Direct pushes to protected branches are not allowed
+
+Please create a pull request instead."
     exit 1
 fi
 
