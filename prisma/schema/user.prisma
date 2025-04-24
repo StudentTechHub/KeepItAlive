@@ -1,0 +1,48 @@
+// Represents third-party account integrations (e.g., Google, GitHub)
+model Account {
+  id                String  @id @default(cuid()) // Unique identifier for the account (auto-generated)
+  userId            String  @map("user_id") // Foreign key linking to the User model
+  type              String // Type of account (e.g., "oauth", "email")
+  provider          String // Name of the provider (e.g., "google", "github")
+  providerAccountId String  @map("provider_account_id") // Provider-specific user ID
+  refreshToken      String? @map("refresh_token ") // Optional token to refresh the access token
+  accessToken       String? @map("access_token") // Optional access token from the provider
+  expiresAt         Int?    @map("expires_at") // Optional expiry time (as a UNIX timestamp)
+  tokenType         String? @map("token_type") // Optional token type (e.g., "Bearer")
+  scope             String? // Optional access scope from the provider
+  idToken           String? @map("id_token") // Optional ID token (e.g., for OpenID Connect)
+  sessionState      String? @map("session_state") // Optional session state identifier
+
+  // user User @relation(fields: [userId], references: [UID], onDelete: Cascade) // Relationship to the User model, delete account if user is deleted
+
+  @@unique([provider, providerAccountId]) // Ensure provider+accountId combination is unique
+  @@index([userId]) // Index on userId for faster queries
+  @@index([provider]) // Index on provider for faster queries 
+  @@map("accounts") // Map this model to the "accounts" table in the database
+}
+
+// Represents a user's login session
+model Session {
+  id           String   @id @default(cuid()) // Unique identifier for the session (auto-generated)
+  sessionToken String   @unique @map("session_token") // Unique token to identify the session
+  userId       String   @map("user_id") // Foreign key linking to the User model
+  expires      DateTime // Expiration time of the session
+
+  //user         User     @relation(fields: [userId], references: [UID], onDelete: Cascade) // Relationship to User model
+
+  @@index([userId]) // Index on userId for faster queries
+  @@map("sessions") // Map this model to the "sessions" table in the database
+}
+
+// Represents tokens used for verifying user actions like email confirmation or password reset
+model VerificationToken {
+  identifier String // Identifier (usually an email)
+  token      String // Verification token
+  expires    DateTime // Token expiration time
+  userId     String   @map("user_id") //  foreign key to User model
+
+  //  user      User @relation(fields: [userId], references: [UID], onDelete: Cascade) // Relationship to User model
+
+  @@unique([identifier, token]) // Ensure each identifier+token combo is unique
+  @@map("verification_tokens") // Map this model to the "verification_tokens" table in the database
+}
