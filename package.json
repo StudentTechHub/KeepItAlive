@@ -8,13 +8,13 @@
     "dev": "next dev",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
-     "prisma:generate": "prisma generate",
+    "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
-     "lint": "eslint . -c ./eslint.config.mjs --fix",
+    "lint": "eslint . -c ./eslint.config.mjs --fix",
     "lint:check": "eslint . -c ./eslint.config.mjs",
     "prepare": "husky || true",
-      "start": "next start"
+    "start": "next start"
   },
   "dependencies": {
     "@prisma/client": "^6.6.0",
@@ -67,10 +67,10 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unused-imports": "4.1.4",
     "husky": "^9.1.7",
-   "lint-staged": "^15.5.0",
+    "lint-staged": "^15.5.0",
     "postcss": "8.4.49",
     "prettier": "3.3.3",
-  "prisma": "^6.6.0",
+    "prisma": "^6.6.0",
     "tailwind-variants": "0.3.0",
     "tailwindcss": "3.4.16",
     "typescript": "5.6.3"
