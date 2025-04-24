@@ -6,7 +6,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL") // Add the database connection string here
-  schemas  = ["user"]            // 👈 change this per file
+  schemas  = ["user"]            
 }
 
 
@@ -17,13 +17,13 @@ model Account {
   type               String                                      // Type of account (e.g., "oauth", "email")
   provider           String                                      // Name of the provider (e.g., "google", "github")
   providerAccountId  String     @map("provider_account_id")      // Provider-specific user ID
-  refresh_token      String?    @map("refresh_token ")           // Optional token to refresh the access token
-  access_token       String?    @map("access_token")             // Optional access token from the provider
-  expires_at         Int?       @map("expires_at")               // Optional expiry time (as a UNIX timestamp)
-  token_type         String?    @map("token_type")               // Optional token type (e.g., "Bearer")
+  refreshToken       String?    @map("refresh_token ")           // Optional token to refresh the access token
+  accessToken        String?    @map("access_token")             // Optional access token from the provider
+  expiresAt          Int?       @map("expires_at")               // Optional expiry time (as a UNIX timestamp)
+  tokenType          String?    @map("token_type")               // Optional token type (e.g., "Bearer")
   scope              String?                                     // Optional access scope from the provider
-  id_token           String?    @map("id_token")                 // Optional ID token (e.g., for OpenID Connect)
-  session_state      String?    @map("session_state")            // Optional session state identifier
+  idToken            String?    @map("id_token")                 // Optional ID token (e.g., for OpenID Connect)
+  sessionState       String?    @map("session_state")            // Optional session state identifier
 
  // user User @relation(fields: [userId], references: [UID], onDelete: Cascade) // Relationship to the User model, delete account if user is deleted
 

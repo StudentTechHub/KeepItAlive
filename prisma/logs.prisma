@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["multiSchema"] // Enable multiSchema preview feature
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas =  ["logs"] // Specify the schema for this model
+}
+
+
+
+model Log {
+  id             Int       @id @default(autoincrement())                 // log_id
+  timeStamp      DateTime  @default(now())                               // when the log was created
+  logType        String    @map("log_type")                              // e.g., 'ERROR'
+  serviceName    String    @map("service_name")                          // service or component name
+  userId         String?   @map("user_id")                               // Supabase auth.users uses UUIDs (not Int!)                            
+  ipAddress      String    @map("ip_address")                            // IP address involved
+  actionType     String    @map("action_type")                           // e.g., 'Ping', 'Restart'
+  status         String                                                  // e.g., 'Success', 'Failure'
+  duration       Float                                                   // time taken for action
+  responseTime   Float?    @map("response_time")                         // nullable, only for health checks
+  errorCode      String?   @map("error_code")                            // nullable error code
+  errorMessage   String?   @map("error_message")                         // nullable detailed message
+  stackTrace     String?   @map("service_track")                         // nullable stack trace
+  webhookUrl     String    @map("webhook_url")                           // webhook URL triggering this log
+  webhookEvent   String    @map("webhook_event")                          // type of event, e.g., 'Push'
+  webhookPayload Json?     @map("webhook_payload")                        // JSON payload sent to the webhook
+
+  
+  @@index([logType])
+  @@index([serviceName])
+  @@index([userId]) 
+  @@map("logs") //map this model to the "logs" table in the database
+  @@schema("logs") // Specify the schema for this model
+}
+

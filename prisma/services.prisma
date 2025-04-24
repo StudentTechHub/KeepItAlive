@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["multiSchema"] // Enable multiSchema preview feature}
+  previewFeatures = ["multiSchema"] // Enable multiSchema preview feature
 }
 datasource db {
   provider = "postgresql"
@@ -29,7 +29,7 @@ model Service {
   connectionUrl                     String      @map("connection_url")                    // URL for connecting to the service
   expectedResponse                  Json        @map("expected_response")                 // Expected JSON response from the service
   pingInterval                      Int?        @map("ping_interval")                     // Optional interval in seconds for health check
-  disabledOnConsecutiveFailure      Boolean     @default(false)                           // Boolean flag to disable after repeated failures
+  disabledOnConsecutiveFailure      Boolean     @default(false) @map("disabled_on_consecutive_failures")                           // Boolean flag to disable after repeated failures
   failuresThreshold                 Int?        @map("failures_threshold")                // Number of allowed consecutive failures before disabling
   status                            ServiceStatus                                         // Enum: ONLINE or OFFLINE
   createdAt                         DateTime    @default(now())   @map("created_at")      // Timestamp when created, auto-generated
