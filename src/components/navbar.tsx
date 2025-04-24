@@ -1,3 +1,7 @@
+"use client";
+
+import clsx from "clsx";
+import { useEffect, useRef } from "react";
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
@@ -10,25 +14,58 @@ import {
 import { Button, Kbd, Link, Input } from "@heroui/react";
 import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
-import clsx from "clsx";
 import { siteConfig } from "@config/site";
-import { GithubIcon, SearchIcon, Logo, LoginIcon } from "@images/icons";
+import { GithubIcon, SearchIcon, Logo } from "@images/icons";
+// import { useRouter } from "next/navigation";
 
+// import { createClient } from "@/utils/supabase/client";
 import { ThemeSwitch } from "@/components/theme-switch";
 
 export const Navbar = () => {
+  // const supabase = createClient();
+  // const router = useRouter();
+
+  // Handle Logout
+  // const handleLogout = async () => {
+  //   const { error } = await supabase.auth.signOut();
+
+  //   if (!error) {
+  //     router.push("/");
+  //   }
+  // };
+
+  // Search Component Logic
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const isMac = typeof window !== "undefined" && navigator.platform.toUpperCase().includes("MAC");
+  const shortcutKeyLabel = isMac ? "⌘" : "Ctrl";
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const isMac = navigator.platform.toUpperCase().includes("MAC");
+      const isShortcutPressed =
+        (isMac && event.metaKey && event.key === "k") ||
+        (!isMac && event.ctrlKey && event.key === "k");
+
+      if (isShortcutPressed) {
+        event.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   const searchInput = (
     <Input
+      ref={searchInputRef}
       aria-label="Search"
       classNames={{
         inputWrapper: "bg-default-100",
         input: "text-sm"
       }}
-      endContent={
-        <Kbd className="hidden lg:inline-block" keys={["command"]}>
-          K
-        </Kbd>
-      }
+      endContent={<Kbd className="hidden lg:inline-block">{shortcutKeyLabel} K</Kbd>}
       labelPlacement="outside"
       placeholder="Search..."
       startContent={
@@ -42,18 +79,18 @@ export const Navbar = () => {
     <HeroUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="max-w-fit">
-          <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Logo className="mt-2" />
+          <NextLink className="flex justify-start items-center" href="/">
+            <Logo className="mt-3" size={40} />
             <p className="font-bold text-inherit">KeepItAlive</p>
           </NextLink>
         </NavbarBrand>
-        <ul className="hidden lg:flex gap-4 justify-start ml-2">
+        <ul className="hidden md:flex gap-4 justify-start ml-2">
           {siteConfig.navItems.map((item) => (
             <NavbarItem key={item.href}>
               <NextLink
                 className={clsx(
                   linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium"
+                  "hover:text-primary data-[active=true]:text-primary data-[active=true]:font-medium"
                 )}
                 color="foreground"
                 href={item.href}
@@ -73,15 +110,24 @@ export const Navbar = () => {
           <ThemeSwitch />
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
-        <NavbarItem className="hidden md:flex">
+        <NavbarItem className="hidden sm:flex gap-4">
           <Button
             as={Link}
-            className="text-sm font-normal text-default-600 bg-default-100"
-            endContent={<LoginIcon className="text-danger" />}
+            color="primary"
             href={siteConfig.authLinks[0].href}
-            variant="flat"
+            size="md"
+            variant="light"
           >
             Login
+          </Button>
+          <Button
+            as={Link}
+            color="primary"
+            href={siteConfig.authLinks[1].href}
+            size="md"
+            variant="solid"
+          >
+            Signup
           </Button>
         </NavbarItem>
       </NavbarContent>

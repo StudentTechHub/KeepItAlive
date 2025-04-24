@@ -12,7 +12,7 @@ import FacebookIcon from "@images/icons/FacebookIcon";
 import DiscordIcon from "@images/icons/DiscordIcon";
 import GoogleIcon from "@images/icons/GoogleIcon";
 
-import { createClient } from "@/utils/supabase/client";
+// import { createClient } from "@/utils/supabase/client";
 import { Separator } from "@/components/separator";
 
 interface LoginProps {}
@@ -46,15 +46,15 @@ const Login: FunctionComponent<LoginProps> = () => {
     e.preventDefault();
   };
 
-  const supabase = createClient();
-  const handleSocialLogin = (provider: "google" | "linkedin_oidc") => {
-    supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        redirectTo: `http://localhost:3000/auth/callback`
-      }
-    });
-  };
+  // const supabase = createClient();
+  // const handleSocialLogin = (provider: "google" | "linkedin_oidc") => {
+  //   supabase.auth.signInWithOAuth({
+  //     provider,
+  //     options: {
+  //       redirectTo: `http://localhost:3000/auth/callback`
+  //     }
+  //   });
+  // };
 
   return (
     <>
@@ -191,7 +191,7 @@ const Login: FunctionComponent<LoginProps> = () => {
               color="default"
               size="lg"
               variant="bordered"
-              onPress={() => handleSocialLogin("google")}
+              // onPress={() => handleSocialLogin("google")}
             >
               <GoogleIcon />
             </Button>

@@ -12,40 +12,28 @@ export const siteConfig = {
     {
       label: "About",
       href: "/about"
+    },
+    {
+      label: "Help & Feedback",
+      href: "/help-feedback"
     }
   ],
   navMenuItems: [
-    {
-      label: "Profile",
-      href: "/profile"
-    },
-    {
-      label: "Dashboard",
-      href: "/dashboard"
-    },
-    {
-      label: "Projects",
-      href: "/projects"
-    },
-    {
-      label: "Team",
-      href: "/team"
-    },
-    {
-      label: "Calendar",
-      href: "/calendar"
-    },
-    {
-      label: "Settings",
-      href: "/settings"
-    },
     {
       label: "Help & Feedback",
       href: "/help-feedback"
     },
     {
-      label: "Logout",
-      href: "/logout"
+      label: "Home",
+      href: "/"
+    },
+    {
+      label: "About",
+      href: "/about"
+    },
+    {
+      label: "Help & Feedback",
+      href: "/help-feedback"
     }
   ],
 
@@ -55,12 +43,12 @@ export const siteConfig = {
       href: "/login"
     },
     {
-      label: "Register",
-      href: "/register"
+      label: "Signup",
+      href: "/signup"
     },
     {
-      label: "Forgot Password",
-      href: "/forgot-password"
+      label: "Reset Password",
+      href: "/reset-password"
     }
   ],
 
