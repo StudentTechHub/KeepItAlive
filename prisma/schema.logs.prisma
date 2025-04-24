@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["multiSchema"] // Enable multiSchema preview feature
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas =  ["logs"] // Specify the schema for this model
+}
+
+
+
+model Log {
+  id             Int       @id @default(autoincrement()) // log_id
+  timeStamp      DateTime  @default(now())               // when the log was created
+  logType        String                                  // e.g., 'ERROR'
+  serviceName    String                                  // service or component name
+  userId         String?                                 // Supabase auth.users uses UUIDs (not Int!)                            
+  ipAddress      String                                  // IP address involved
+  actionType     String                                  // e.g., 'Ping', 'Restart'
+  status         String                                  // e.g., 'Success', 'Failure'
+  duration       Float                                   // time taken for action
+  responseTime   Float?                                  // nullable, only for health checks
+  errorCode      String?                                 // nullable error code
+  errorMessage   String?                                 // nullable detailed message
+  stackTrace     String?                                 // nullable stack trace
+  webhookUrl     String                                  // webhook URL triggering this log
+  webhookEvent   String                                  // type of event, e.g., 'Push'
+  webhookPayload Json?                                   // JSON payload sent to the webhook
+
+  
+  @@index([logType])
+  @@index([serviceName])
+  @@index([userId]) 
+  @@map("logs") //map this model to the "logs" table in the database
+  @@schema("logs") // Specify the schema for this model
+}
+

@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["multiSchema"] // Enable multiSchema preview feature}
+}
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas =  ["services"] // Specify the schema for this model
+}
+
+// Model for service types like "MongoDB", "PostgreSQL", etc.
+model ServiceType {
+  id            String     @id @default(uuid())        // Primary key, auto-generated UUID
+  type          String                                 // Type of the service (e.g., "MongoDB")
+  iconUrl       String?     @map("icon_url")           // Optional icon URL for the service type
+
+  services  Service[]                                  // One-to-many relation to Service
+  @@map("service_types")                               // Map this model to the "service_types" table in the database
+  @@index([id])
+  @@schema("services")                                     // Index on id for faster queries
+}
+
+// Model for actual services using the types above
+model Service {
+  id                                String      @id @default(uuid())                      // Primary key, auto-generated UUID
+  name                              String                                                // Name of the service (e.g., "My Mongo Cluster")
+  description                       String?                                               // Optional description of the service
+  serviceTypeId                     String      @map("service_type_id")                   // Foreign key to ServiceType
+  connectionUrl                     String      @map("connection_url")                    // URL for connecting to the service
+  expectedResponse                  Json        @map("expected_response")                 // Expected JSON response from the service
+  pingInterval                      Int?        @map("ping_interval")                     // Optional interval in seconds for health check
+  disabledOnConsecutiveFailure      Boolean     @default(false)                           // Boolean flag to disable after repeated failures
+  failuresThreshold                 Int?        @map("failures_threshold")                // Number of allowed consecutive failures before disabling
+  status                            ServiceStatus                                         // Enum: ONLINE or OFFLINE
+  createdAt                         DateTime    @default(now())   @map("created_at")      // Timestamp when created, auto-generated
+  updatedAt                         DateTime    @updatedAt        @map("updated_at")      // Timestamp when updated, auto-updates on change
+
+
+  serviceType           ServiceType @relation(fields: [serviceTypeId], references: [id])
+  @@map("services") // Map this model to the "services" table in the database
+  @@schema("services") // Specify the schema for this model
+}
+
+
+enum ServiceStatus {
+  ONLINE   // Service is up and running
+  OFFLINE  // Service is currently down
+
+  @@schema("services") // Specify the schema for this enum
+}
