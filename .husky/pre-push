@@ -11,5 +11,5 @@ fi
 
 # Run checks
 echo "🔍 Running pre-push checks..."
-# npm run check-types || exit 1
+npm run check-types || exit 1
 npm run build || exit 1
