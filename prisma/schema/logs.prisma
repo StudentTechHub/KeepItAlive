@@ -1,23 +1,40 @@
 model Log {
-  id             Int      @id @default(autoincrement()) // log_id
-  timeStamp      DateTime @default(now()) // when the log was created
-  logType        String   @map("log_type") // e.g., 'ERROR'
-  serviceName    String   @map("service_name") // service or component name
-  userId         String?  @map("user_id") // Supabase auth.users uses UUIDs (not Int!)                            
-  ipAddress      String   @map("ip_address") // IP address involved
-  actionType     String   @map("action_type") // e.g., 'Ping', 'Restart'
-  status         String // e.g., 'Success', 'Failure'
-  duration       Float // time taken for action
-  responseTime   Float?   @map("response_time") // nullable, only for health checks
-  errorCode      String?  @map("error_code") // nullable error code
-  errorMessage   String?  @map("error_message") // nullable detailed message
-  stackTrace     String?  @map("service_track") // nullable stack trace
-  webhookUrl     String   @map("webhook_url") // webhook URL triggering this log
-  webhookEvent   String   @map("webhook_event") // type of event, e.g., 'Push'
-  webhookPayload Json?    @map("webhook_payload") // JSON payload sent to the webhook
+  /// log_id
+  id             Int      @id @default(autoincrement()) 
+  /// when the log was created
+  timeStamp      DateTime @default(now()) 
+  /// e.g., 'ERROR'
+  logType        String   @map("log_type") @default("Unspecified")
+  /// service or component name
+  serviceName    String   @map("service_name") 
+  /// Supabase auth.users uses UUIDs (not Int!) 
+  userId         String?  @map("user_id") 
+  /// IP address , nullble for events like backend events                         
+  ipAddress      String?   @map("ip_address") 
+  /// e.g., 'Ping', 'Restart'
+  actionType     String   @map("action_type") 
+  /// e.g., 'Success', 'Failure'
+  status         String 
+  /// time taken for action , may be  unknown for failed/incomplete actions
+  duration       Float? 
+  /// nullable, only for health checks
+  responseTime   Float?   @map("response_time") 
+  /// nullable error code
+  errorCode      String?  @map("error_code") 
+  /// nullable detailed message
+  errorMessage   String?  @map("error_message") 
+  /// nullable stack trace  : It is a report that shows the exact sequence of function or method calls that led to an error or crash in your application.
+  stackTrace     String?  @map("service_track")
+  /// webhook URL triggering this log 
+  webhookUrl     String   @map("webhook_url") 
+  /// type of event, e.g., 'Push'
+  webhookEvent   String   @map("webhook_event")
+  /// JSON payload sent to the webhook
+  webhookPayload Json?    @map("webhook_payload") 
 
   @@index([logType])
   @@index([serviceName])
   @@index([userId])
-  @@map("logs") //map this model to the "logs" table in the database
+  ///map this model to the "logs" table in the database
+  @@map("logs") 
 }

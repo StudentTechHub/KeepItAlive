@@ -1,32 +1,66 @@
-// Represents a webhook configuration set up by a user
+/// Represents a webhook configuration set up by a user
 model Webhook {
-  id        Int      @id @default(autoincrement()) // Primary key, auto-incrementing integer
-  userId    String   @map("user_id") // Foreign key pointing to the User table
-  event     String // The event that triggers this webhook (e.g., "payment_success")
-  targetUrl String   @map("target_url") // URL to which the webhook will send data
-  secret    String? // Optional secret used for verification/authentication
-  headers   Json? // Optional custom headers to send with the webhook request
-  isActive  Boolean  @default(true) @map("is_active") // Flag to activate/deactivate the webhook
-  createdAt DateTime @default(now()) @map("created_at") // Timestamp of webhook creation (defaults to current time)
-  updatedAt DateTime @updatedAt @map("updated_at") // Timestamp automatically updated whenever the row is modified
+  /// Primary key, auto-generated 
+  id        BigInt     @id @default(autoincrement())
 
-  deliveries WebhookDelivery[] // One-to-many relation to all deliveries this webhook has made
+  /// Foreign key pointing to the User table
+  userId    String   @map("user_id")
+
+  /// The event that triggers this webhook (e.g., "payment_success")
+  event     String
+
+  /// URL to which the webhook will send data
+  targetUrl String   @map("target_url")
+
+  /// Optional secret used for verification/authentication
+  secret    String?
+
+  /// Optional custom headers to send with the webhook request
+  headers   Json?
+
+  /// Flag to activate/deactivate the webhook
+  isActive  Boolean  @default(true) @map("is_active")
+
+  /// Timestamp of webhook creation (defaults to current time)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  /// Timestamp automatically updated whenever the row is modified
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  /// One-to-many relation to all deliveries this webhook has made
+  deliveries WebhookDelivery[]
 
   @@index([id])
-  @@map("webhooks") // Map this model to the "webhooks" table in the database
+  /// Map this model to the "webhooks" table in the database
+  @@map("webhooks")
 }
 
-// Stores the delivery logs for each webhook attempt
+/// Stores the delivery logs for each webhook attempt
 model WebhookDelivery {
-  id         Int       @id @default(autoincrement()) // Primary key, auto-incrementing integer
-  webhookId  Int       @map("webhook_id") // Foreign key linking to the associated webhook
-  statusCode Int?      @map("status_code") // Optional HTTP response status (e.g., 200, 404)
-  response   String? // Optional response content from the target server
-  error      String? // Optional error message if the webhook failed
-  sentAt     DateTime? @map("sent_at") // Optional timestamp of when the webhook was sent
+  /// Primary key, auto-incrementing integer
+  id         BigInt       @id @default(autoincrement())
 
-  webhook Webhook @relation(fields: [webhookId], references: [id]) // Link back to the webhook that sent this
+  /// Foreign key linking to the associated webhook
+  webhookId  BigInt       @map("webhook_id")
 
-  @@index([webhookId]) // Index on webhookId for faster querying
-  @@map("webhook_deliveries") // Map this model to the "webhook_deliveries" table in the database
+  /// Optional HTTP response status (e.g., 200, 404)
+  statusCode Int?      @map("status_code")
+
+  /// Optional response content from the target server
+  response   String?
+
+  /// Optional error message if the webhook failed
+  error      String?
+
+  /// Optional timestamp of when the webhook was sent
+  sentAt     DateTime? @map("sent_at")
+
+  /// Link back to the webhook that sent this
+  webhook Webhook @relation(fields: [webhookId], references: [id])
+
+  /// Index on webhookId for faster querying
+  @@index([webhookId])
+
+  /// Map this model to the "webhook_deliveries" table in the database
+  @@map("webhook_deliveries")
 }

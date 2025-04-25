@@ -1,36 +1,84 @@
-// Model for service types like "MongoDB", "PostgreSQL", etc.
-model ServiceType {
-  id      String  @id @default(uuid()) // Primary key, auto-generated UUID
-  type    String // Type of the service (e.g., "MongoDB")
-  iconUrl String? @map("icon_url") // Optional icon URL for the service type
+/// This file defines the database schema for the services used in the application.
 
-  services Service[] // One-to-many relation to Service
+/// This enum defines the possible statuses for a service.
+enum ServiceStatus {
+  /// Service is up and running
+  ONLINE
+  /// Service is currently down
+  OFFLINE
+  /// Status can't be determined
+  UNKNOWN
+  /// Service is working but experiencing some issues
+  DEGRADED
+  /// Service is encountering an error or failure
+  ERROR
+  /// Service is in the process of restarting
+  RESTARTING
+  
+}
+
+/// Model for service types like "MongoDB", "PostgreSQL", etc.
+model ServiceType {
+  /// Primary key, auto-generated UUID
+  id      String  @id @default(cuid()) 
+
+  /// Type of the service (e.g., "MongoDB")
+  type    String
+
+  /// Optional icon URL for the service type
+  iconUrl String? @map("icon_url")
+
+  /// One-to-many relation to Service
+  services Service[]
 
   @@index([id])
-  @@map("service_types") // Map this model to the "service_types" table in the database
+  /// Map this model to the "service_types" table in the database
+  @@map("service_types")
 }
 
-// Model for actual services using the types above
+/// Model for actual services using the types above
 model Service {
-  id                           String        @id @default(uuid()) // Primary key, auto-generated UUID
-  name                         String // Name of the service (e.g., "My Mongo Cluster")
-  description                  String? // Optional description of the service
-  serviceTypeId                String        @map("service_type_id") // Foreign key to ServiceType
-  connectionUrl                String        @map("connection_url") // URL for connecting to the service
-  expectedResponse             Json          @map("expected_response") // Expected JSON response from the service
-  pingInterval                 Int?          @map("ping_interval") // Optional interval in seconds for health check
-  disabledOnConsecutiveFailure Boolean       @default(false) @map("disabled_on_consecutive_failures") // Boolean flag to disable after repeated failures
-  failuresThreshold            Int?          @map("failures_threshold") // Number of allowed consecutive failures before disabling
-  status                       ServiceStatus // Enum: ONLINE or OFFLINE
-  createdAt                    DateTime      @default(now()) @map("created_at") // Timestamp when created, auto-generated
-  updatedAt                    DateTime      @updatedAt @map("updated_at") // Timestamp when updated, auto-updates on change
+  /// Primary key, auto-generated CUID
+  id                           String        @id @default(cuid())
 
+  /// Name of the service (e.g., "My Mongo Cluster")
+  name                         String
+
+  /// Optional description of the service
+  description                  String?
+
+  /// Foreign key to ServiceType
+  serviceTypeId                String        @map("service_type_id")
+
+  /// URL for connecting to the service
+  connectionUrl                String        @map("connection_url")
+
+  /// Expected JSON response from the service
+  expectedResponse             Json          @map("expected_response")
+
+  /// Optional interval in seconds for health check
+  pingInterval                 Int?          @map("ping_interval")
+
+  /// Boolean flag to disable after repeated failures
+  disabledOnConsecutiveFailure Boolean       @default(false) @map("disabled_on_consecutive_failures")
+
+  /// Number of allowed consecutive failures before disabling
+  failuresThreshold            Int?          @map("failures_threshold")
+
+  /// Enum: ONLINE or OFFLINE
+  status                       ServiceStatus
+
+  /// Timestamp when created, auto-generated
+  createdAt                    DateTime      @default(now()) @map("created_at")
+
+  /// Timestamp when updated, auto-updates on change
+  updatedAt                    DateTime      @updatedAt @map("updated_at")
+
+  /// Defines the relationship to the ServiceType model using `serviceTypeId` as the foreign key.
+  /// Ensures each service is linked to a specific service type.
   serviceType ServiceType @relation(fields: [serviceTypeId], references: [id])
 
-  @@map("services") // Map this model to the "services" table in the database
+  /// Map this model to the "services" table in the database
+  @@map("services")
 }
 
-enum ServiceStatus {
-  ONLINE // Service is up and running
-  OFFLINE // Service is currently down
-}
