@@ -3,14 +3,16 @@
 import React, { useState, useEffect, FunctionComponent } from "react";
 import Link from "next/link";
 import { Button, Input, Form } from "@heroui/react";
-import { MentionCircle } from "@images/icons/MentionCircleIcon";
-import { KeyIcon } from "@images/icons/KeyIcon";
-import { MailIcon } from "@images/icons/MailIcon";
-import { EyeFilledIcon } from "@images/icons/EyeFilledIcon";
-import { EyeSlashFilledIcon } from "@images/icons/EyeSlashFilledIcon";
-import FacebookIcon from "@images/icons/FacebookIcon";
-import DiscordIcon from "@images/icons/DiscordIcon";
-import GoogleIcon from "@images/icons/GoogleIcon";
+import {
+  GoogleIcon,
+  FacebookIcon,
+  DiscordIcon,
+  EyeSlashFilledIcon,
+  EyeFilledIcon,
+  MailIcon,
+  MentionCircle,
+  KeyIcon
+} from "@images/icons";
 
 // import { createClient } from "@/utils/supabase/client";
 import { Separator } from "@/components/separator";
@@ -193,7 +195,7 @@ const Login: FunctionComponent<LoginProps> = () => {
               variant="bordered"
               // onPress={() => handleSocialLogin("google")}
             >
-              <GoogleIcon />
+              <GoogleIcon className="text-[#8E8E8E]" />
             </Button>
             <Button
               isIconOnly
@@ -202,7 +204,7 @@ const Login: FunctionComponent<LoginProps> = () => {
               size="lg"
               variant="bordered"
             >
-              <DiscordIcon />
+              <DiscordIcon className="text-[#8E8E8E]" />
             </Button>
             <Button
               isIconOnly
@@ -211,7 +213,7 @@ const Login: FunctionComponent<LoginProps> = () => {
               size="lg"
               variant="bordered"
             >
-              <FacebookIcon />
+              <FacebookIcon className="text-[#8E8E8E]" />
             </Button>
           </div>
         </footer>

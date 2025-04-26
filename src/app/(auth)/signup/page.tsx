@@ -3,14 +3,16 @@
 import React, { useState, useEffect, FunctionComponent } from "react";
 import Link from "next/link";
 import { Button, Input, Form } from "@heroui/react";
-import { MentionCircle } from "@images/icons/MentionCircleIcon";
-import { KeyIcon } from "@images/icons/KeyIcon";
-import { MailIcon } from "@images/icons/MailIcon";
-import { EyeFilledIcon } from "@images/icons/EyeFilledIcon";
-import { EyeSlashFilledIcon } from "@images/icons/EyeSlashFilledIcon";
-import FacebookIcon from "@images/icons/FacebookIcon";
-import DiscordIcon from "@images/icons/DiscordIcon";
-import GoogleIcon from "@images/icons/GoogleIcon";
+import {
+  GoogleIcon,
+  FacebookIcon,
+  DiscordIcon,
+  EyeSlashFilledIcon,
+  EyeFilledIcon,
+  MailIcon,
+  KeyIcon,
+  MentionCircle
+} from "@images/icons";
 
 import { Separator } from "@/components/separator";
 
@@ -183,7 +185,7 @@ const Signup: FunctionComponent = () => {
               size="lg"
               variant="bordered"
             >
-              <GoogleIcon />
+              <GoogleIcon className="text-[#8E8E8E]" />
             </Button>
             <Button
               isIconOnly
@@ -192,7 +194,7 @@ const Signup: FunctionComponent = () => {
               size="lg"
               variant="bordered"
             >
-              <DiscordIcon />
+              <DiscordIcon className="text-[#8E8E8E]" />
             </Button>
             <Button
               isIconOnly
@@ -201,7 +203,7 @@ const Signup: FunctionComponent = () => {
               size="lg"
               variant="bordered"
             >
-              <FacebookIcon />
+              <FacebookIcon className="text-[#8E8E8E]" />
             </Button>
           </div>
         </footer>
