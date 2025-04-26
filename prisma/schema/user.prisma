@@ -1,4 +1,4 @@
-model Userinf{
+model User{
   /// Primary key, auto-generated UUID
   id        String   @id @default(cuid()) 
 
