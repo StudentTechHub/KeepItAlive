@@ -1,0 +1,66 @@
+/// Represents a webhook configuration set up by a user
+model Webhook {
+  /// Primary key, auto-generated 
+  id        BigInt     @id @default(autoincrement())
+
+  /// Foreign key pointing to the User table
+  userId    String   @map("user_id")
+
+  /// The event that triggers this webhook (e.g., "payment_success")
+  event     String
+
+  /// URL to which the webhook will send data
+  targetUrl String   @map("target_url")
+
+  /// Optional secret used for verification/authentication
+  secret    String?
+
+  /// Optional custom headers to send with the webhook request
+  headers   Json?
+
+  /// Flag to activate/deactivate the webhook
+  isActive  Boolean  @default(true) @map("is_active")
+
+  /// Timestamp of webhook creation (defaults to current time)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  /// Timestamp automatically updated whenever the row is modified
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  /// One-to-many relation to all deliveries this webhook has made
+  deliveries WebhookDelivery[]
+
+  @@index([id])
+  /// Map this model to the "webhooks" table in the database
+  @@map("webhooks")
+}
+
+/// Stores the delivery logs for each webhook attempt
+model WebhookDelivery {
+  /// Primary key, auto-incrementing integer
+  id         BigInt       @id @default(autoincrement())
+
+  /// Foreign key linking to the associated webhook
+  webhookId  BigInt       @map("webhook_id")
+
+  /// Optional HTTP response status (e.g., 200, 404)
+  statusCode Int?      @map("status_code")
+
+  /// Optional response content from the target server
+  response   String?
+
+  /// Optional error message if the webhook failed
+  error      String?
+
+  /// Optional timestamp of when the webhook was sent
+  sentAt     DateTime? @map("sent_at")
+
+  /// Link back to the webhook that sent this
+  webhook Webhook @relation(fields: [webhookId], references: [id])
+
+  /// Index on webhookId for faster querying
+  @@index([webhookId])
+
+  /// Map this model to the "webhook_deliveries" table in the database
+  @@map("webhook_deliveries")
+}

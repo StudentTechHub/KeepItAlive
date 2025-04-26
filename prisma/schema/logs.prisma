@@ -1,0 +1,40 @@
+model Log {
+  /// log_id
+  id             Int      @id @default(autoincrement()) 
+  /// when the log was created
+  timeStamp      DateTime @default(now()) 
+  /// e.g., 'ERROR'
+  logType        String   @map("log_type") @default("Unspecified")
+  /// service or component name
+  serviceName    String   @map("service_name") 
+  /// Supabase auth.users uses UUIDs (not Int!) 
+  userId         String?  @map("user_id") 
+  /// IP address , nullble for events like backend events                         
+  ipAddress      String?   @map("ip_address") 
+  /// e.g., 'Ping', 'Restart'
+  actionType     String   @map("action_type") 
+  /// e.g., 'Success', 'Failure'
+  status         String 
+  /// time taken for action , may be  unknown for failed/incomplete actions
+  duration       Float? 
+  /// nullable, only for health checks
+  responseTime   Float?   @map("response_time") 
+  /// nullable error code
+  errorCode      String?  @map("error_code") 
+  /// nullable detailed message
+  errorMessage   String?  @map("error_message") 
+  /// nullable stack trace  : It is a report that shows the exact sequence of function or method calls that led to an error or crash in your application.
+  stackTrace     String?  @map("service_track")
+  /// webhook URL triggering this log 
+  webhookUrl     String   @map("webhook_url") 
+  /// type of event, e.g., 'Push'
+  webhookEvent   String   @map("webhook_event")
+  /// JSON payload sent to the webhook
+  webhookPayload Json?    @map("webhook_payload") 
+
+  @@index([logType])
+  @@index([serviceName])
+  @@index([userId])
+  ///map this model to the "logs" table in the database
+  @@map("logs") 
+}

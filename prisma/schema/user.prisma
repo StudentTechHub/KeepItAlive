@@ -1,0 +1,26 @@
+model User{
+  /// Primary key, auto-generated UUID
+  id        String   @id @default(cuid()) 
+
+  /// User's email address
+  email     String   @unique
+
+  /// User's password (hashed)
+  password  String? 
+
+  /// User's name
+  name      String?
+
+  /// User's profile picture URL
+  avatarUrl String? @map("avatar_url")
+
+  /// Timestamp of user creation (defaults to current time)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  /// Timestamp automatically updated whenever the row is modified
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([id])
+  /// Map this model to the "users" table in the database
+  @@map("userinf")
+}

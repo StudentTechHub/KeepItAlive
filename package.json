@@ -3,15 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint . -c ./eslint.config.mjs --fix",
-    "lint:check": "eslint . -c ./eslint.config.mjs",
+    "check-types": "tsc --noEmit",
+    "dev": "next dev",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "prepare": "husky",
-    "check-types": "tsc --noEmit"
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "lint": "eslint . -c ./eslint.config.mjs --fix",
+    "lint:check": "eslint . -c ./eslint.config.mjs",
+    "prepare": "husky || true",
+    "start": "next start"
   },
   "dependencies": {
     "@heroui/button": "2.2.17",
@@ -26,6 +29,7 @@
     "@heroui/switch": "2.2.15",
     "@heroui/system": "^2.4.13",
     "@heroui/theme": "2.4.13",
+    "@prisma/client": "^6.6.0",
     "@react-aria/ssr": "3.9.7",
     "@react-aria/visually-hidden": "3.8.21",
     "@reduxjs/toolkit": "^2.7.0",
@@ -34,7 +38,7 @@
     "clsx": "2.1.1",
     "framer-motion": "11.13.1",
     "intl-messageformat": "^10.5.0",
-    "next": "15.0.4",
+    "next": "^15.3.1",
     "next-themes": "^0.4.4",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -63,10 +67,15 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unused-imports": "4.1.4",
     "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
     "postcss": "8.4.49",
     "prettier": "3.3.3",
+    "prisma": "^6.6.0",
     "tailwind-variants": "0.3.0",
     "tailwindcss": "3.4.16",
     "typescript": "5.6.3"
+  },
+  "prisma": {
+    "schema": "./prisma/schema"
   }
 }
