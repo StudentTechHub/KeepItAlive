@@ -40,7 +40,6 @@ model User {
 
   /// Relationships
   services Service[]
-  webhooks Webhook[]
 
   /// Indexes for query optimization
   @@index([email])
