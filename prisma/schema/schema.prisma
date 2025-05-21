@@ -1,9 +1,16 @@
+// Main schema configuration for the Keep It Alive uptime monitoring tool
+
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["prismaSchemaFolder"]
+  previewFeatures = ["fullTextSearchPostgres"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // Adding direct URL for connection pooling optimizations (useful for Vercel deployment)
+  directUrl = env("DIRECT_URL")
 }
+
+// Import all other schema files
+// Each file contains related models for better organization

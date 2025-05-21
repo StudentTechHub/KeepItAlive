@@ -11,10 +11,12 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
+    "prisma:seed": "ts-node --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\"}\" prisma/seed.ts",
     "lint": "eslint . -c ./eslint.config.mjs --fix",
     "lint:check": "eslint . -c ./eslint.config.mjs",
     "prepare": "husky || true",
-    "start": "next start"
+    "start": "next start",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@heroui/button": "2.2.17",
@@ -29,7 +31,7 @@
     "@heroui/switch": "2.2.15",
     "@heroui/system": "^2.4.13",
     "@heroui/theme": "2.4.13",
-    "@prisma/client": "^6.6.0",
+    "@prisma/client": "^6.8.2",
     "@react-aria/ssr": "3.9.7",
     "@react-aria/visually-hidden": "3.8.21",
     "@reduxjs/toolkit": "^2.7.0",
@@ -38,6 +40,7 @@
     "clsx": "2.1.1",
     "framer-motion": "11.13.1",
     "intl-messageformat": "^10.5.0",
+    "mongodb": "^6.16.0",
     "next": "^15.3.1",
     "next-themes": "^0.4.4",
     "react": "18.3.1",
@@ -70,9 +73,11 @@
     "lint-staged": "^15.5.0",
     "postcss": "8.4.49",
     "prettier": "3.3.3",
-    "prisma": "^6.6.0",
+    "prisma": "^6.8.2",
     "tailwind-variants": "0.3.0",
     "tailwindcss": "3.4.16",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "5.6.3"
   },
   "prisma": {

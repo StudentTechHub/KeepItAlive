@@ -1,18 +1,36 @@
-model User{
+model User {
   /// Primary key, auto-generated UUID
-  id        String   @id @default(cuid()) 
+  id String @id @default(cuid())
 
   /// User's email address
-  email     String   @unique
+  email String @unique
 
   /// User's password (hashed)
-  password  String? 
+  password String?
 
-  /// User's name
-  name      String?
+  /// User's display name
+  name String?
 
   /// User's profile picture URL
   avatarUrl String? @map("avatar_url")
+
+  /// Preferred timezone for displaying dates/times
+  timezone String @default("UTC") @map("timezone")
+
+  /// User's notification preferences as JSON
+  notifyPrefs Json? @map("notification_preferences")
+
+  /// Flag to enable/disable all notifications
+  notifyEnabled Boolean @default(true) @map("notifications_enabled")
+
+  /// Whether the email has been verified
+  isVerified Boolean @default(false) @map("is_verified")
+
+  /// Account status (active, suspended, etc.)
+  status String @default("active")
+
+  /// Last login timestamp
+  lastLogin DateTime? @map("last_login")
 
   /// Timestamp of user creation (defaults to current time)
   createdAt DateTime @default(now()) @map("created_at")
@@ -20,7 +38,13 @@ model User{
   /// Timestamp automatically updated whenever the row is modified
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  /// Relationships
+  services Service[]
+  webhooks Webhook[]
+
+  /// Indexes for query optimization
+  @@index([email])
   @@index([id])
-  /// Map this model to the "users" table in the database
-  @@map("userinf")
+  /// Map this model to the "users" table in the database (fixed table name from userinf to users)
+  @@map("users")
 }

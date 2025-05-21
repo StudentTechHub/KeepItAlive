@@ -14,71 +14,262 @@ enum ServiceStatus {
   ERROR
   /// Service is in the process of restarting
   RESTARTING
-  
+  /// Service is disabled by user
+  DISABLED
+  /// Service is under maintenance
+  MAINTENANCE
+}
+
+/// Protocol used for the service connection
+enum ServiceProtocol {
+  /// HTTP protocol
+  HTTP
+  /// HTTPS protocol (secure)
+  HTTPS
+  /// TCP protocol
+  TCP
+  /// Custom protocol
+  CUSTOM
+}
+
+/// Method used for HTTP/HTTPS checks
+enum HttpMethod {
+  /// GET request
+  GET
+  /// POST request
+  POST
+  /// HEAD request (headers only)
+  HEAD
+  /// OPTIONS request
+  OPTIONS
 }
 
 /// Model for service types like "MongoDB", "PostgreSQL", etc.
 model ServiceType {
   /// Primary key, auto-generated UUID
-  id      String  @id @default(cuid()) 
+  id String @id @default(cuid())
 
+  // ! not creating an enum for the service type cause enums are hard to update in postgres. We will instead have frontend enums which will validate the type of service type
   /// Type of the service (e.g., "MongoDB")
-  type    String
+  type String @unique
+
+  /// Display name for the service type
+  displayName String @map("display_name")
 
   /// Optional icon URL for the service type
   iconUrl String? @map("icon_url")
+
+  /// Default port for this service type
+  defaultPort Int? @map("default_port")
+
+  /// Category for grouping service types
+  category String?
 
   /// One-to-many relation to Service
   services Service[]
 
   @@index([id])
+  @@index([type])
   /// Map this model to the "service_types" table in the database
   @@map("service_types")
+}
+
+/// Predefined colors for service UI customization
+model ServiceColor {
+  /// Primary key
+  id String @id @default(cuid())
+
+  /// Color name (e.g. "Sky Blue")
+  name String @unique
+
+  /// Hex code (#RRGGBB format)
+  hexValue String @map("hex_value")
+
+  /// Services using this color
+  services Service[]
+
+  @@map("service_colors")
+}
+
+/// Predefined icons for service UI customization
+model ServiceIcon {
+  /// Primary key
+  id String @id @default(cuid())
+
+  /// Icon name (e.g. "database")
+  name String @unique
+
+  /// Icon path or SVG content
+  iconPath String @map("icon_path")
+
+  /// Services using this icon
+  services Service[]
+
+  @@map("service_icons")
 }
 
 /// Model for actual services using the types above
 model Service {
   /// Primary key, auto-generated CUID
-  id                           String        @id @default(cuid())
+  id String @id @default(cuid())
 
   /// Name of the service (e.g., "My Mongo Cluster")
-  name                         String
+  name String
 
   /// Optional description of the service
-  description                  String?
+  description String?
+
+  /// Foreign key to User who owns this service
+  userId String @map("user_id")
 
   /// Foreign key to ServiceType
-  serviceTypeId                String        @map("service_type_id")
+  serviceTypeId String @map("service_type_id")
 
   /// URL for connecting to the service
-  connectionUrl                String        @map("connection_url")
+  connectionUrl String @map("connection_url")
 
-  /// Expected JSON response from the service
-  expectedResponse             Json          @map("expected_response")
+  /// Protocol used for connection (HTTP, HTTPS, TCP, CUSTOM)
+  protocol ServiceProtocol @default(HTTPS)
 
-  /// Optional interval in seconds for health check
-  pingInterval                 Int?          @map("ping_interval")
+  /// Method used for HTTP/HTTPS requests
+  httpMethod HttpMethod? @map("http_method")
+
+  /// Custom HTTP headers as JSON
+  headers Json?
+
+  /// Expected status code for HTTP/HTTPS responses
+  expectedStatusCode Int? @default(200) @map("expected_status_code")
+
+  /// Expected JSON response from the service (pattern to match)
+  expectedResponse Json? @map("expected_response")
+
+  /// Timeout in milliseconds for connection attempts
+  timeout Int @default(30000) // 30 seconds default
+
+  /// Interval in seconds for health check
+  pingInterval Int @default(300) @map("ping_interval") // Default 5 minutes
+
+  /// Whether service auto-recovers after going back online
+  autoRecover Boolean @default(true) @map("auto_recover")
 
   /// Boolean flag to disable after repeated failures
-  disabledOnConsecutiveFailure Boolean       @default(false) @map("disabled_on_consecutive_failures")
+  disabledOnConsecutiveFailure Boolean @default(true) @map("disabled_on_consecutive_failures")
 
   /// Number of allowed consecutive failures before disabling
-  failuresThreshold            Int?          @map("failures_threshold")
+  failuresThreshold Int @default(3) @map("failures_threshold")
 
-  /// Enum: ONLINE or OFFLINE
-  status                       ServiceStatus
+  /// Current service status
+  status ServiceStatus @default(UNKNOWN)
+
+  /// Last successful check timestamp
+  lastSuccessfulCheck DateTime? @map("last_successful_check")
+
+  /// Last failed check timestamp
+  lastFailedCheck DateTime? @map("last_failed_check")
+
+  /// Next scheduled check timestamp
+  nextScheduledCheck DateTime? @map("next_scheduled_check")
+
+  /// Custom accent color ID for UI
+  colorId String? @map("color_id")
+
+  /// Custom icon ID for UI
+  iconId String? @map("icon_id")
+
+  /// Current consecutive failures count
+  consecutiveFailures Int @default(0) @map("consecutive_failures")
+
+  /// Overall uptime percentage
+  uptimePercentage Float @default(0) @map("uptime_percentage")
 
   /// Timestamp when created, auto-generated
-  createdAt                    DateTime      @default(now()) @map("created_at")
+  createdAt DateTime @default(now()) @map("created_at")
 
   /// Timestamp when updated, auto-updates on change
-  updatedAt                    DateTime      @updatedAt @map("updated_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   /// Defines the relationship to the ServiceType model using `serviceTypeId` as the foreign key.
   /// Ensures each service is linked to a specific service type.
   serviceType ServiceType @relation(fields: [serviceTypeId], references: [id])
 
+  /// Relation to User who owns this service
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// Relation to ServiceColor for UI customization
+  color ServiceColor? @relation(fields: [colorId], references: [id])
+
+  /// Relation to ServiceIcon for UI customization
+  icon ServiceIcon? @relation(fields: [iconId], references: [id])
+
+  /// One-to-many relation to ServicePing records
+  pings ServicePing[]
+
+  /// Service-specific webhooks
+  webhooks ServiceWebhook[]
+
+  /// Indexes for query optimization
+  @@index([userId])
+  @@index([serviceTypeId])
+  @@index([status])
+  @@index([updatedAt])
   /// Map this model to the "services" table in the database
   @@map("services")
 }
 
+/// Model for storing individual ping records
+model ServicePing {
+  /// Primary key
+  id String @id @default(cuid())
+
+  /// Associated service
+  serviceId String @map("service_id")
+
+  /// Timestamp of the ping
+  timestamp DateTime @default(now())
+
+  /// Success or failure
+  successful Boolean @default(false)
+
+  /// Response time in milliseconds
+  responseTime Int? @map("response_time")
+
+  /// HTTP status code if applicable
+  statusCode Int? @map("status_code")
+
+  /// Error message if failed
+  errorMessage String? @map("error_message")
+
+  /// Service relation
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId])
+  @@index([timestamp])
+  @@map("service_pings")
+}
+
+/// Webhooks specific to individual services
+model ServiceWebhook {
+  /// Primary key
+  id String @id @default(cuid())
+
+  /// Associated service
+  serviceId String @map("service_id")
+
+  /// Event type (success, failure, recovery, etc)
+  eventType String @map("event_type")
+
+  /// Webhook URL
+  url String
+
+  /// Secret for webhook signing
+  secret String?
+
+  /// Whether webhook is enabled
+  enabled Boolean @default(true)
+
+  /// Service relation
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId])
+  @@map("service_webhooks")
+}
